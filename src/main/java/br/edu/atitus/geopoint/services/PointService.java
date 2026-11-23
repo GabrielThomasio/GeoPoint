@@ -7,8 +7,6 @@ import br.edu.atitus.geopoint.repositories.PointRepository;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import static tools.jackson.databind.jsonFormatVisitors.JsonValueFormat.UUID;
-
 public class PointService {
     private final PointRepository repository;
 
@@ -16,22 +14,28 @@ public class PointService {
         this.repository = repository;
     }
 
-    public PointEntity insert(PointRequest pointRequest){
+    public PointEntity insert(PointRequest pointRequest) {
         if (pointRequest == null)
             throw new RuntimeException("Objeto Nulo");
         if (pointRequest.name() == null || pointRequest.name().isBlank())
             throw new RuntimeException("Nome inválido");
-        if (pointRequest.latitude() == null || pointRequest.latitude().compareTo(BigDecimal.valueOf(-90)) < 0 || pointRequest.latitude().compareTo(BigDecimal.valueOf(90)) > 0)
-            throw new RuntimeException("Latitude Invalida - Intervalo aceito: -90 a 90");
+        if (pointRequest.latitude() == null
+                || pointRequest.latitude().compareTo(BigDecimal.valueOf(-90)) < 0
+                || pointRequest.latitude().compareTo(BigDecimal.valueOf(90)) > 0)
+            throw new RuntimeException("Latitude inválida - Intervalo aceito: -90 a 90");
+        if (pointRequest.longitude() == null
+                || pointRequest.longitude().compareTo(BigDecimal.valueOf(-180)) < 0
+                || pointRequest.longitude().compareTo(BigDecimal.valueOf(180)) > 0)
+            throw new RuntimeException("Longitude inválida - Intervalo aceito: -180 a 180");
 
         PointEntity point = new PointEntity();
 
-        point.setId(java.util.UUID.randomUUID());
+        point.setId(UUID.randomUUID());
         point.setName(pointRequest.name().trim());
-        point.setDescription(pointRequest.description().trim());
+        point.setDescription(pointRequest.description() == null ? null : pointRequest.description().trim());
         point.setLatitude(pointRequest.latitude());
         point.setLongitude(pointRequest.longitude());
 
-        //TODO invocar camadas de repositório
+        return repository.insert(point);
     }
 }

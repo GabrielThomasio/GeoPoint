@@ -1,0 +1,5 @@
+$kind: http-request
+name: ""
+url: http://localhost:8080/api/points
+method: POST
+order: 1000
