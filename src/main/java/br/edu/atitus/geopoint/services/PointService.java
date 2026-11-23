@@ -3,7 +3,7 @@ package br.edu.atitus.geopoint.services;
 import br.edu.atitus.geopoint.dtos.PointRequest;
 import br.edu.atitus.geopoint.entities.PointEntity;
 import br.edu.atitus.geopoint.repositories.PointRepository;
-
+import java.util.NoSuchElementException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -42,5 +42,11 @@ public class PointService {
 
     public List<PointEntity> findAll() {
         return repository.findAll();
+    }
+
+    public PointEntity findById(UUID id) {
+        PointEntity point = repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Ponto não localizado com o ID: " + id));
+        return point;
     }
 }

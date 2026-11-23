@@ -3,6 +3,8 @@ package br.edu.atitus.geopoint.repositories;
 import br.edu.atitus.geopoint.entities.PointEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.Optional;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,5 +58,21 @@ public class PointRepository {
         """;
 
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public Optional<PointEntity> findById(UUID id) {
+
+        String sql = """
+        SELECT id, name, description, latitude, longitude
+        FROM points
+        WHERE id = ?
+        """;
+        try {
+            PointEntity point = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            return Optional.ofNullable(point);
+
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
