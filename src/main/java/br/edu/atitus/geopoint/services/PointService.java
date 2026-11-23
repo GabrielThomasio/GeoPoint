@@ -5,6 +5,7 @@ import br.edu.atitus.geopoint.entities.PointEntity;
 import br.edu.atitus.geopoint.repositories.PointRepository;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 public class PointService {
@@ -37,5 +38,9 @@ public class PointService {
         point.setLongitude(pointRequest.longitude());
 
         return repository.insert(point);
+    }
+
+    public List<PointEntity> findAll() {
+        return repository.findAll();
     }
 }
